@@ -1,0 +1,54 @@
+Interactive Smoothing for time-series signals.
+
+Interactive smoothing for time-series signals, with sliders that 
+allow you to adjust the smoothing parameters continuously 
+while observing the effect on your signal dynamically. Run 
+SmoothSliderTest to see how it works. Can be used with 
+any smoothing function, but two fast smooth functions are 
+included.  Details are in the text file SmoothSliderInfo.txt. 
+ Tom O'Haver, toh@umd.edu, July 2006.  
+ Slider function by Matthew Jones.
+
+SmoothSlider 
+ Interactive smoothing for your own data, with sliders to control smooth 
+ width and the number of passes of the smoothing function through the signal.
+ To use it, place the signal to be smoothed in the global variables X,Y, and 
+ define MaxSmoothwidth as the maximum range of the smooth width
+ slider. Then execute this m-file. The smoothed signal is left in global 
+ variable SmoothY. The actual smoothing is performed by the function 
+ SmoothSliderRedraw, which is called when the sliders are moved. You can 
+ change the smoothing function by replacing "fastsmooth" in line 8 of
+ SmoothSliderRedraw with another smoothing function.
+
+SmoothSliderTest
+Self-contained test of SmoothSlider. Generates a synthetic signal assigned to Y, 
+then calls SmoothSlider.
+
+SmoothSliderRedraw, SmoothSlider1, SmoothSlider2.
+Functions called by SmoothSlider when the sliders are changed
+
+function SmoothY=fastbsmooth(Y,smoothwidth)
+ Smooths vector Y by unweighted sliding-average  (boxcar)
+ smooth of width = smoothwidth. Works well with signals up  to 
+100,000 points in length and smooth widths of 1000 points or more.
+ Faster than convolution-based smooths for large smooth widths.
+
+function SmoothY=fastsmooth(Y,smoothwidth)
+ Smooths vector Y by triangular smooth of width = 
+ smoothwidth. Works well with signals up to 
+ 100,000 points in length and smooth widths of 1000 points or more. 
+ Faster than convolution-based smooths for large smooth widths.
+
+DemoSmoothSlider
+Self-contained demo of the effect of smoothing on peak height, 
+width, and signal-to-noise ratio. Generates a Gaussian peak
+with random noise, smooths it, and measures the signal-
+to-noise ratio (SNR), peak height, and peak width. The 
+Resample slider applies different random noise samples, to 
+demonstrate the low-frequency noise that remains. To change the 
+smoothing function, replace "fastsmooth" in DemoSmoothRedraw
+with another smoothing function.
+
+DemoSmooth1, DemoSmooth2. DemoSmooth3, DemoSmoothRedraw, 
+PeakEst, gaussian:
+Functions called by DemoSmoothSlider

@@ -1,0 +1,127 @@
+Matlab M files
+
+apmconv7_coh: currently use to convert apm data to matlab files for use in coh analysis. Results in ecog_lfp files. Update 11/25/08: code now allows user to input if the voltage channel is present or not (allows for running of rest data)
+
+apmconv7: converts apm data into matlab files usable for spike sorting. Results in _ecog files and _a_ddt (accelerometry) and ddt files for spike sorting.  Update 11/25/08: code now allows user to input if the voltage channel is present or not and if lfp is present or not (allows for processing of ecog data from single unit recordings)
+
+recog_coh_alldata_temp_graphs: converts ecog_lfp files to calculate coh. Uses all time points in each epoch (even if unequal epoch lengths) and graphs rest and active coh for each contact pair compared with the lfp data. Calculates coherence and transformed coherence. Draws a box around the contact pair determined by imaging to be over M1 UPdate 11/25/08 - added "save and write trans coh" section to output a matfile with transformed coherece structure with rest and active elements
+
+coh_spect: first attempt to make 3D plots with coherence data. Not currently used for anything.
+
+cohgramc: Chronux function file that makes coherograms using multitaper method. 
+
+Coherencyc: another chronux function file
+
+coherr.m: another chronux function file - this is the one that tends to cause an error when running cohgramc
+
+working_out_mtcoh_programs: my attempt to analyze coherence calling the cohgramc function file. Have been able to get it to work for plotting coherence, but have not been able to include the statistical parameters that are included (error in another function that is called from cohgramc).
+
+recog_coh: calculates coherence for discrete user-defined epoch lengths.
+
+recog_coherogram: probably a forerunner of more current coherogram attempts. This is unfinished code. Includes much of the same code as recog_coh_alldata_temp_graphs. 
+
+recog_coh_alldata: intact coherence code, plotting section of this code not as well-developed/current as temp_grahs version
+
+ecogskikecoh: Measures coherence between single unit and ecog. also graphs PSDs of single unit and the ecog data. 11/25/08
+
+ecogpsdcoh_restdata: graphs resting state PSD and ecog/lfp coherence for rest data (no button voltage changes). Uses ecog_lfp_raw_data output from apmconv7_coh
+
+ecogpsd_restdata: graphs resting state PSD from ecog_lfp_raw_data output from apmconv7_coh
+
+ecogcoh_active_rest: forerunner of recog coh programs. Incomplete code, but does create 2 structures for separating/storing rest and active data
+
+ecogcoh_multi: forerunner of recog_coh_alldata_temp_graphs. First attempt to plot all contact pairs in one graph. Includes LEN_WINDOW variable (now defunct)
+
+ecogcoh: first coherence code. User identifies which two channels from ecog_lfp_raw_data matrix to analyze via mscohere function
+
+recog_rest_active: calculates coherence for remontaged ecog_lfp_raw_data, comparing each contact pair to lfp. Does not calculate transformed coherence. Plotting not sophisticated. **Has commented out code for comparing adjacent contacts. Included LEN_WINDOW variable(now defunct).
+
+recog_rest_active_backup: identical to recog_rest_active. Not used currently. 
+
+stepped_coh: related to ecogcoh_multi, but includes additional step/window, resulting in much over-averaging of the data. Also has adjacent contact comparison code. 
+
+sm_rest_active: old attempt at coherence and windowing using convn function (why?). Does also have commented-out adjacent contact comparison code.
+
+RunSpikeOscil: This program analyses spontaneous spike trains in NEX for oscillations. Created by RST, 2005-07-30. In SpkAnal1 file, not GL4K.
+
+ecogPSD: Sho's original code for creating PSD plots
+	-Structure format
+	-CALLS: mean_signal(calculates mean PSD across epochs), FFT_band_fill (makes beta, gamma bands for x-axis), 	quantPSD (creates order [pre M1 M1S1 LFP], allfreq*, subfreq)
+	*in this version, allfreq max power/max freq does not exclude data below 4Hz
+
+quantPSD: requires inputs: rest, active, FREQ_QPSD, freq, filename
+	*This was Sho's original code, but has been slightly modified from its original format
+
+ecogPSD4quant: modified version of ecogPSD for use with ecog_lfp_raw_data (the output of apmconv7_coh);
+	-remontages ecog data
+	-rounds AlphaOmega timestamp data to 3 decimal points
+	-creates rest and active matrices (not structures)
+	-calculates meanPSD for rest and active (mean of all rest or active epochs = grand_mean_PSD_r (or _a))
+	-normalizes mean PSD to peak rest height, calculates log10 of meanPSD, normalizes log10 mean PSD to rest height
+	-CALLS quantPSDmatrix function to calculate allfreq, subfreq, order
+	-CALLS exportdata function  to save allfreq, subfreq data to excel file
+	-writes output to specific PD/Dys/ET folders
+	- OUTPUT = order, rest, active, freq, log rest/active, norm rest/active, norm log rest/active, allfreq, subfreq
+
+quantPSDmatrix: called by ecogPSD4quant; creates order [M1, S1, STN], allfreq, subfreq variables (uses the variables "rest" and 	"active" from ecogPSD4quant
+
+quantPSDshort: function designed to work on ecog_lfp_raw_data; different from other quantPSD-type functions in that it does not  	ask for M1 to be manually inputed and does not make an order [M1 S1 STN] output. It only makes allfreq and 		subfreq matrices using "rest" and "active" variables from whatever program calls it, as well as the M1 variable stored in 	the program that calls it - Called by variableQuantPlot
+
+PlotQuantPSDfrom Sho21809: the original PlotQuantPSD function - Freq bands are defined (not flexible), user must select area 	for analysis (premotor, M1, S1, STN LFP), creates bar graph of %power in each defined freq band
+	-works on group data (pulls data from PD or dystonia folders to create group mean data)
+
+PlotQuantPSD: a function
+	- FREQ_QPSD is flexible
+	-user inputs BrainArea (M1 S1 STN) and LimbArea (hand, elbow, shoulder, jaw, foot, arm, non-arm)
+	-plots bar graphs of the % power in each freq band (subfreq) (output of quantPSD/ecogPSD family)
+	-uses group data
+
+plotMeanPSD: meant to plot line graphs from outputs of ecogPSD4quant (rest, active)
+
+variableQuantPlot: Like other plotQuant functions, creates bar graph of subfreq data. This program was designed to load data 		output from ecogPSD4quant then CALLS quantPSD short to make a *new* subfreq matrix for plotting. The 		FREQ_QPSD variable is more flexible. This way, if you've already run all your files through ecogPSD4quant and later 	decide to change the frequency bands in the bar graph, you can do so without re-running the files though 		ecogPSD4quant individually.
+	-uses Group data
+	-resulting plot = subplot of rest data: PDvsDYS(vsET), subplot of active data: PDvsDYS(vsET)
+
+variableQuantPlotET: is special version of variableQuantPlot that compares PD vs ET vs PDwithTremor groups
+
+variableQuantPlot_rva: changes the plottting such that PD rest vs active is one subplot, Dystonia rest vs active is a different 		subplot, etc
+
+DataExport: Program that concatenates allfreq and subfreq into an matrix suitable for export to SPSS. Saves this matrix as an 		excel file. This data is organized such that there are only six variables (freq of max log power, max log power value, total log power across all frequency bands, mean log power in a given frequency band, mean % power in that band, mean log power during movement/mean log power at rest). 
+
+DataExport3x31: concatenates allfreq and subfreq into a 3x31 matrix in excel. This format is appropriate for creating an SPSS database if you want to do a repeated measures ANOVA, as all rest and active data are saved as separate variables.
+
+exportdata: a function that does the same as DataExport program. Called by ecogPSD4quant.*
+
+exportdata3x31: function version of DataExport3x31. Called by ecogPSD4quant.*
+*In ecogPSD4quant, you can choose which data export program you want to use, depending on what analysis you plan to do. 
+
+GroupDataExport: Does what DataExport does, but automatically for all files in the folder of user's choosing (designed to speed up the process of catching up on data entry)
+
+GroupDataExport3x31: see GroupDataExport.
+
+exportRESTdata: does what exportdata does, but for the "true rest" condition (including writing to excel file). Output is 5 variables (freq of max power, max power value, total power across freq bins, power of a given freq bin, % power). Under this program, the 1x3x3 allfreq matrix becomes a 3x3 matrix, and the 5x2x3 subfreq matrix becomes a 15x2 matrix. 
+
+ecogPSD_restQuant: does what ecogPSD4quant does, but uses input from Phil's ecogPSD_restdata program
+	-uses the ecogPSD_restdata variable "psdall", which is equivalent to rest/active matrices in ecogPSD4quant
+
+quantPSDrest: creates allfreq and subfreq matrices for "true rest" data
+
+M1vsSTN: plots data from M1 contact vs STN lfp. Computes correlation coefficient and p value
+
+betadesync: incomplete code. Working on calculating % beta desync for group data
+
+StatQuantPSD: incomplete code. For awhile was trying to perform ANOVA in matlab on quantPSD-type data
+
+createfigure.m: a temporary code for making figures specifically for my poster (5/2009)
+
+grand_ecog_coh.m: I think is an early version of EcogLfp_Group_Coh. undated
+
+graph_combined_coh.m: appears to be temporary code for working out the code for group coherence plots
+
+EcogLFP_GroupCoh_special.m: Where EcogLfp_GroupCoh.m pools and averages coherence data for PD, ET, and dystonia, the _special version of this program adds a 4th group, which can represent either the PDwith dystonic sx group, or the PDtremor dominant group, then can compare PD vs DYS vs PDwith dystonix sx   OR   PD vs ET vs PDwith tremor in graphs (graphs are labeled PD, DYS, Other)
+
+m1s1coh.m: calculates coherence between m1 and s1 on a case-by-case basis, similar to recog_coh_alldata_temp_graphs. Coherence data is saved to a trans_coh structure containing rest coh data, active coh data, and the value of the m1 contact. These data are automatically saved to a disease-specific folder in the directory C:\Users\Starr\Documents\ECOG data\Trans_coh_data. Files are named "filename_m1s1coh.m"
+m1s1restcoh.m: similar to m1s1coh, but designed for the true rest condition
+groupm1s1coh.m: calculates and plots average group m1-s1 coherence for PD, dystonia, ET groups
+
+
