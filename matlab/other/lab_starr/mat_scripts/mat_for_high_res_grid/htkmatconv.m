@@ -104,7 +104,7 @@ end
 % 
 % close all
 %% common reference
-if length(ecog.contact_pair) <=28
+if length(ecog.contact_pair) <=32
      length_CAR = 28;
 elseif length(ecog.contact_pair) >=64
     length_CAR = 64;

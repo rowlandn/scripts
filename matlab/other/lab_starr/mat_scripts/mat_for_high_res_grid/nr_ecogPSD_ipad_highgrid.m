@@ -122,11 +122,13 @@ Dx =1;
 %% Define period to compute psd
 % initialize structures that will contain all rest/active analysis
 rest = struct('contact_pair',{});
+assignin('base','rest1',rest)
 prep = struct('contact_pair',{});
 active = struct('contact_pair',{});
 
-for i = 1:num_contact_pair
+for i = 1:29%num_contact_pair
     for j = 1:num_epoch
+        assignin('base','num_epoch',num_epoch)
         % rest
         if j==1
             start_rest = int32(ecog.ipad_ON_time(j));
@@ -134,6 +136,9 @@ for i = 1:num_contact_pair
             start_rest = int32(ecog.rest_time(j));
         end
         end_rest = int32(ecog.prep_time(j));
+        i
+        j
+        assignin('base','rest2',rest)
 %         t = start_rest + (end_rest - start_rest)/2;% psd computed using 2s of rest in the middle of that period
 %         rest(1).contact_pair(i).epoch(j).remontaged_ecog_signal = ecog.contact_pair(i).remontaged_ecog_signal(t-EPOCH_LEN:t+EPOCH_LEN);
         rest(1).contact_pair(i).epoch(j).remontaged_ecog_signal = ecog.contact_pair(i).remontaged_ecog_signal(end_rest-EPOCH_LEN:end_rest);
@@ -153,7 +158,9 @@ for i = 1:num_contact_pair
         active(1).contact_pair(i).epoch(j).time = [start_active start_active+EPOCH_LEN];
     end
 end
-
+assignin('base','rest2',rest)
+assignin('base','prep',prep)
+assignin('base','active',active)
 
 %% calculate PSD using pwelch
 % perform PSD analysis using pwelch, average all the epochs for

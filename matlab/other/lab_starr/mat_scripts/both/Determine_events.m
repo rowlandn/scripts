@@ -13,6 +13,7 @@ assignin('base','filename',filename)
 ipad_chan = aux.chan(1).raw;
 accel_chan = aux.chan(2).raw;
 button_chan = aux.chan(2).raw;
+%button_chan = aux.chan(2).raw;
 % emg_chan1 = emg.chan(1).raw;
 % emg_chan2 = emg.chan(2).raw;
 % emg_chan3 = emg.chan(3).raw;
